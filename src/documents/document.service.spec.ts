@@ -24,9 +24,18 @@ describe('DocumentsService', () => {
   });
 
   it('should create a document', async () => {
-    const document = { id: 1, title: 'Test Doc', filePath: 'uploads/test.pdf', uploadedBy: 1 };
-    jest.spyOn(repo, 'save').mockResolvedValue(document);
-
-    expect(await service.createDocument('Test Doc', document as any, 1)).toEqual(document);
+    const document = { 
+      id: 1, 
+      title: 'Test Doc', 
+      content: 'Sample Content', 
+      uploadedBy: 1 
+    };
+  
+    jest.spyOn(repo, 'create').mockReturnValue(document as any); // Mock create()
+    jest.spyOn(repo, 'save').mockResolvedValue(document); // Mock save()
+  
+    expect(await service.createDocument('Test Doc', 'Sample Content', 1)).toEqual(document);
   });
+  
+  
 });

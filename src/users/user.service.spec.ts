@@ -29,9 +29,12 @@ describe('UsersService', () => {
     const role: 'admin' | 'editor' | 'viewer' = 'admin';
   
     const user: User = { id: 1, email, password, role };
-    jest.spyOn(repo, 'save').mockResolvedValue(user);
+  
+    jest.spyOn(repo, 'create').mockReturnValue(user as any); // Mock create()
+    jest.spyOn(repo, 'save').mockResolvedValue(user); // Mock save()
   
     expect(await service.createUser(email, password, role)).toEqual(user);
   });
+  
   
 });

@@ -64,7 +64,7 @@ describe('UsersService', () => {
         const user = { id: 1, email: 'test@example.com', role: 'viewer' } as User;
 
         jest.spyOn(userRepository, 'findOne').mockResolvedValue(user);
-        jest.spyOn(userRepository, 'remove').mockResolvedValue(Promise.resolve(user)); // ✅ Corrected
+        jest.spyOn(userRepository, 'remove').mockResolvedValue(Promise.resolve(user)); //  Corrected
 
         await userService.deleteUser(1);
 

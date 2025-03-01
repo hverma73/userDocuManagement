@@ -9,7 +9,7 @@ import { IngestionModule } from './ingestion/ingestion.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env', // Ensure .env is loaded properly
+      envFilePath: '.env', 
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
@@ -26,7 +26,7 @@ import { IngestionModule } from './ingestion/ingestion.module';
           type: 'postgres',
           url: databaseUrl,
           autoLoadEntities: true,
-          synchronize: true, // ⚠️ Disable in production
+          synchronize: true,
           logging: true, // Enable SQL query logs
         };
       },

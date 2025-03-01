@@ -19,7 +19,6 @@ export class UsersService {
   //  Create a new user with hashed password
   async createUser(email: string, password: string, role: 'admin' | 'editor' | 'viewer') {
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(" Hashed Password:", hashedPassword);
     const user = this.userRepository.create({ email, password: hashedPassword, role });
     return this.userRepository.save(user);
   }

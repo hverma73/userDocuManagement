@@ -22,8 +22,6 @@ import { IngestionModule } from './ingestion/ingestion.module';
           throw new Error('DATABASE_URL is not defined in the environment variables!');
         }
 
-        console.log('Connecting to database:', databaseUrl); // Debugging log
-
         return {
           type: 'postgres',
           url: databaseUrl,

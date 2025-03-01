@@ -1,40 +1,43 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersService } from './users.services';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { User } from './user.entity';
-import { Repository } from 'typeorm';
+import { AuthService } from '../authService/auth.service';
+import { UsersService } from '../users/users.services';
+import { JwtService } from '@nestjs/jwt';
 
-describe('UsersService', () => {
-  let service: UsersService;
-  let repo: Repository<User>;
+describe('AuthService', () => {
+  let service: AuthService;
+  let usersService: UsersService;
+  let jwtService: JwtService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        UsersService,
+        AuthService,
         {
-          provide: getRepositoryToken(User),
-          useClass: Repository,
+          provide: UsersService,
+          useValue: {
+            createUser: jest.fn(),
+            findByEmail: jest.fn(),
+          },
+        },
+        {
+          provide: JwtService,
+          useValue: {
+            sign: jest.fn(() => 'mocked-jwt-token'),
+          },
         },
       ],
     }).compile();
 
-    service = module.get<UsersService>(UsersService);
-    repo = module.get<Repository<User>>(getRepositoryToken(User));
+    service = module.get<AuthService>(AuthService);
+    usersService = module.get<UsersService>(UsersService);
+    jwtService = module.get<JwtService>(JwtService);
   });
 
-  it('should create a user', async () => {
-    const email = 'test@example.com';
-    const password = 'hash';
-    const role: 'admin' | 'editor' | 'viewer' = 'admin';
-  
-    const user: User = { id: 1, email, password, role };
-  
-    jest.spyOn(repo, 'create').mockReturnValue(user as any); // Mock create()
-    jest.spyOn(repo, 'save').mockResolvedValue(user); // Mock save()
-  
-    expect(await service.createUser(email, password, role)).toEqual(user);
+  it('should generate JWT token', () => {
+    const user = { id: 1, email: 'test@example.com', role: 'admin' };
+    const token = service.generateToken(user);
+
+    expect(token).toBe('mocked-jwt-token');
+    expect(jwtService.sign).toHaveBeenCalledWith(user);
   });
-  
-  
 });

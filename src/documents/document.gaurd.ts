@@ -2,7 +2,7 @@ import { Injectable, ExecutionContext, UnauthorizedException, ForbiddenException
 import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {
+export class DocumentAuthGuard extends AuthGuard('jwt') {
   canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
     
@@ -21,11 +21,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const request = context.switchToHttp().getRequest();
     const { method, route } = request;
 
-    // User Management APIs - Admin Only
-    if (route.path.startsWith('/users') && user.role !== 'admin') {
-      throw new ForbiddenException('Access denied. Admins only.');
-    }
-
     // Document Management Permissions
     if (route.path.startsWith('/documents')) {
       if (method === 'POST' || method === 'PUT') {
@@ -39,7 +34,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
           throw new ForbiddenException('Access denied. Admins only.');
         }
       } else if (method === 'GET') {
-        // All roles can view documents
+        // All roles (Admin, Editor, Viewer) can view documents
         return user;
       }
     }

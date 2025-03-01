@@ -23,9 +23,17 @@ export class AuthService {
   
     if (!isPasswordValid) throw new UnauthorizedException('Invalid credentials');
   
-    const token = this.jwtService.sign({ id: user.id, email: user.email, role: user.role });
+    const token = this.generateToken(user);
     return { access_token: token };
-  }  
+  }
+  
+  generateToken(user: { id: number; email: string; role: string }): string {
+    return this.jwtService.sign({
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    });
+  }
 
   async logout() {
     return { message: 'Logout successful' };
